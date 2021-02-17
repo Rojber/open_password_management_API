@@ -1,3 +1,4 @@
+import os
 from bson.binary import STANDARD, UUID, Binary
 from pymongo import MongoClient
 from bson import CodecOptions
@@ -8,8 +9,14 @@ import base64
 
 # you need 96 bytes long cryptographically secure master key as a part of your CSFLE data key
 def read_master_key(path="master-key.txt"):
-    with open(path, "rb") as f:
-        return f.read(96)
+    if os.path.isfile(path):
+        with open(path, "rb") as f:
+            return f.read(96)
+    else:
+        master_key = os.urandom(96)
+        with open(path, 'wb') as f:
+            f.write(master_key)
+        return master_key
 
 
 def create_csfle_client(connection_string):

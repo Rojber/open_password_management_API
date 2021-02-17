@@ -13,7 +13,7 @@ fake.add_provider(date_time)
 
 
 def populate(db, client_encryption, data_key_id):
-    for x in range(1, 20):
+    for x in range(0, 20):
         account = {
             'email': client_encryption.encrypt(fake.ascii_company_email(), "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic", data_key_id),
             'login': client_encryption.encrypt(fake.user_name(), "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic", data_key_id),

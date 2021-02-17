@@ -1,14 +1,14 @@
 import os
 import app.auxiliaryFuncs
+from dotenv import load_dotenv
 
+load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    #SECRET_KEY = os.environ.get('SECRET_KEY')
-    #SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    MAIL_SUBJECT_PREFIX = '[Flasky]'
-    MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
+    MAIL_SUBJECT_PREFIX = ''
+    MAIL_SENDER = ''
     ADMIN = os.getenv('ADMIN')
     __public_server_key, __private_server_key = app.auxiliaryFuncs.getRSAKeys()
     EXPORT_PUBLIC_SERVER_KEY = app.auxiliaryFuncs.exportKey(__public_server_key)

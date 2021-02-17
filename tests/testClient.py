@@ -28,8 +28,8 @@ def get_encrypted_login(pubKey, jss):
 
 
 if __name__ == '__main__':
-    test_login = ""
-    test_password = ""
+    test_login = "mcbridejohn"
+    test_password = "rprince"
 
     RSApublic, RSAprivate = auxiliaryFuncs.getRSAKeys()
     request = requests.get('http://127.0.0.1:5000/api/GetPublicKey')
