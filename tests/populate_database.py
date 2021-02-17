@@ -38,7 +38,7 @@ def populate(db, client_encryption, data_key_id):
             ]
         }
         # Insert users directly into MongoDB
-        result = db.accounts.insert_one(account)
+        result = db.passwordManager.accounts.insert_one(account)
 
         # Print to the console the ObjectID of the new document
         print('Created {0} of 20 as {1}'.format(x, result.inserted_id))

@@ -2,7 +2,7 @@ import base64
 import pprint
 import requests
 from bson import json_util
-import auxiliaryFuncs
+from app import auxiliaryFuncs
 import time
 from Crypto.PublicKey import RSA
 

@@ -1,10 +1,15 @@
 from datetime import datetime
+from secrets import token_hex
+
+
+def getToken():
+    return token_hex(24)
 
 
 def checkToken(token, db):
     userID = None
     outcome = 0
-    session = db.sessions.find_one(
+    session = db.passwordManager.sessions.find_one(
         {
             'token': token
         }
@@ -16,7 +21,7 @@ def checkToken(token, db):
     total_seconds = time_delta.total_seconds()
     if (total_seconds / 60) < 240:
         userID = session['_id']
-        db.sessions.find_one_and_update(
+        db.passwordManager.sessions.find_one_and_update(
             {
                 'token': token
             },
@@ -29,7 +34,7 @@ def checkToken(token, db):
         )
         return outcome, userID, session['public_key_PEM']
     else:
-        db.sessions.remove(
+        db.passwordManager.sessions.remove(
             {
                 'token': token
             }, True

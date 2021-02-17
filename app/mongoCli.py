@@ -5,14 +5,45 @@ from pymongo.encryption_options import AutoEncryptionOpts
 from pymongo.encryption import ClientEncryption
 import base64
 
-# enter here your connection string to MongoDB database (works with MongoDB Atlas too)
-CONNECTION_STRING = ""
-
 
 # you need 96 bytes long cryptographically secure master key as a part of your CSFLE data key
 def read_master_key(path="master-key.txt"):
     with open(path, "rb") as f:
         return f.read(96)
+
+
+def create_csfle_client(connection_string):
+    local_master_key = read_master_key()
+    kms_providers = {
+        "local": {
+            "key": local_master_key,
+        },
+    }
+
+    csfle_helper = CsfleHelper(kms_providers=kms_providers, key_alt_name="main_key", connection_string=connection_string)
+    data_key_id, base64_data_key = csfle_helper.find_or_create_data_key()
+    data_key_id = Binary(base64.b64decode(base64_data_key), 4)
+    schema = csfle_helper.create_json_schema(data_key=base64_data_key)
+    mongoClient = csfle_helper.get_csfle_enabled_client(schema)
+    client_encryption = csfle_helper.client_encryption
+    return mongoClient, client_encryption, data_key_id
+
+
+def drop_database(connection_string):
+    local_master_key = read_master_key()
+    kms_providers = {
+        "local": {
+            "key": local_master_key,
+        },
+    }
+
+    csfle_helper = CsfleHelper(kms_providers=kms_providers, key_alt_name="main_key", connection_string=connection_string)
+    data_key_id, base64_data_key = csfle_helper.find_or_create_data_key()
+    data_key_id = Binary(base64.b64decode(base64_data_key), 4)
+    schema = csfle_helper.create_json_schema(data_key=base64_data_key)
+    mongoClient = csfle_helper.get_csfle_enabled_client(schema)
+    db = mongoClient.passwordManager
+    mongoClient.drop_database(db)
 
 
 class CsfleHelper:
@@ -22,7 +53,7 @@ class CsfleHelper:
                  key_coll="__keyVault",
                  key_alt_name=None,
                  schema=None,
-                 connection_string=CONNECTION_STRING,
+                 connection_string=None,
                  mongocryptd_bypass_spawn=False,
                  mongocryptd_spawn_path="mongocryptd"):
         super().__init__()

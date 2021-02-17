@@ -4,13 +4,8 @@ import re
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import PKCS1_OAEP, AES
-import secrets
 from bson import json_util
 import hashlib
-
-
-def getToken():
-    return secrets.token_hex(24)
 
 
 def getDecryptor(key):
