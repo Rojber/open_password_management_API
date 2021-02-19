@@ -44,14 +44,3 @@ def manageAccount():
             }, True
         )
         return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'OK'}, g.userKeyPEM)), 200
-
-
-@api.route('/LogOut', methods=['GET'])
-def log_out():
-    if request.method == 'GET':
-        g.db.passwordManager.sessions.delete_one(
-            {
-                '_id': ObjectId(g.userID)
-            }
-        )
-        return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'OK'}, g.userKeyPEM)), 200

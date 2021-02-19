@@ -24,17 +24,26 @@ def getKey():
 # DEBUG METHODS - DISABLE BEFORE RELEASE!
 @public.route('/Populate', methods=['GET'])
 def pop():
-    populate_database.populate(g.db, g.client_encryption, g.data_key_id)
-    return 'Database Populated with 20 accounts!', 200
+    if current_app.config['TESTING'] or current_app.config['DEBUG']:
+        populate_database.populate(g.db, g.client_encryption, g.data_key_id)
+        return 'Database Populated with 20 accounts!', 200
+    else:
+        return 'NOT FOUND', 404
 
 
 @public.route('/AllData', methods=['GET'])
 def allData():
-    response = g.db.passwordManager.accounts.find()
-    return json_util.dumps(response), 200
+    if current_app.config['TESTING'] or current_app.config['DEBUG']:
+        response = g.db.passwordManager.accounts.find()
+        return json_util.dumps(response), 200
+    else:
+        return 'NOT FOUND', 404
 
 
 @public.route('/DropDb', methods=['GET'])
 def dropDb():
-    drop_database(current_app.config['MONGODB_CONNECTION_STRING'])
-    return 'Database cleared!', 200
+    if current_app.config['TESTING'] or current_app.config['DEBUG']:
+        drop_database(current_app.config['MONGODB_CONNECTION_STRING'])
+        return 'Database cleared!', 200
+    else:
+        return 'NOT FOUND', 404

@@ -6,7 +6,7 @@ from app import auxiliaryFuncs
 import string
 
 
-@api.route('/api/PasswordStrength', methods=['POST'])
+@api.route('/PasswordStrength', methods=['POST'])
 def getPasswordStrength():
     js = request.json
     js = auxiliaryFuncs.decryptAES(js, current_app.config['SERVER_DECRYPTOR'])
@@ -18,14 +18,14 @@ def getPasswordStrength():
     return json_util.dumps(auxiliaryFuncs.encryptAES({'response': resp}, g.userKeyPEM)), 200
 
 
-@api.route('/api/StrongPassword/<PasswordLen>', methods=['GET'])
+@api.route('/PasswordStrength/<PasswordLen>', methods=['GET'])
 def getStrongPassword(PasswordLen):
     chars = string.ascii_letters + string.digits + "!#$%&()*+,-./<=>?@[]^_{|}~"
     passw = ''.join(choice(chars) for i in range(int(PasswordLen)))
     return json_util.dumps(auxiliaryFuncs.encryptAES({'response': str(passw)}, g.userKeyPEM)), 200
 
 
-@api.route('/api/PasswordStrength/Hibp', methods=['POST'])
+@api.route('/PasswordStrength/Hibp', methods=['POST'])
 def passwordCheckHIBP():
     js = request.json
     js = auxiliaryFuncs.decryptAES(js, current_app.config['SERVER_DECRYPTOR'])
