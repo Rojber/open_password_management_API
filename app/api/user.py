@@ -38,9 +38,9 @@ def manageAccount():
         )
         return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'OK'}, g.userKeyPEM)), 201
     if request.method == 'DELETE':
-        g.db.passwordManager.accounts.remove(
+        g.db.passwordManager.accounts.delete_one(
             {
                 '_id': ObjectId(g.userID)
-            }, True
+            }
         )
         return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'OK'}, g.userKeyPEM)), 200

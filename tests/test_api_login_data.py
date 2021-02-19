@@ -69,7 +69,7 @@ def test_post_logindata(client, auth, app):
         )
         check = check['logindata'][0]
 
-    # check if login date has been updated
+    # check if login data has been updated
     assert js.items() <= check.items()
 
 
