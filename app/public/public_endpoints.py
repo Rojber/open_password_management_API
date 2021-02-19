@@ -2,7 +2,7 @@ from flask import current_app, g
 from bson import json_util
 from app.public import public
 from app.mongoCli import create_csfle_client, drop_database
-from tests import populate_database
+from app import populate_database
 
 
 @public.before_request
