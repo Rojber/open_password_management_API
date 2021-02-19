@@ -20,7 +20,7 @@ def populate(db, client_encryption, data_key_id):
                 "_id": ObjectId(),
                 'site': "test_login_site2.com",
                 'login': client_encryption.encrypt("test_login2", "AEAD_AES_256_CBC_HMAC_SHA_512-Random", data_key_id),
-                'password': client_encryption.encrypt("test_password1", "AEAD_AES_256_CBC_HMAC_SHA_512-Random", data_key_id),
+                'password': client_encryption.encrypt("test_password2", "AEAD_AES_256_CBC_HMAC_SHA_512-Random", data_key_id),
                 'passwordStrength': randint(1, 5),
                 'note': "note2"
             }

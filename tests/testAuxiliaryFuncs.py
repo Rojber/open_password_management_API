@@ -60,9 +60,9 @@ def measurePasswordStrength(password):
     return strength
 
 
-def encryptAES(js, userKeyPEM):
+def encryptAES(js, serverKeyPEM):
     text = json_util.dumps(js)
-    RSAencryptor = PKCS1_OAEP.new(RSA.importKey(userKeyPEM))
+    RSAencryptor = PKCS1_OAEP.new(RSA.importKey(serverKeyPEM))
     AESkey = get_random_bytes(16)
     nonce = get_random_bytes(16)
     encryptedAESkey = RSAencryptor.encrypt(AESkey)
@@ -74,14 +74,11 @@ def encryptAES(js, userKeyPEM):
         'cipherText': base64.b64encode(cipherText).decode('utf-8'),
         'tag': base64.b64encode(tag).decode('utf-8'),
         'encryptedKey': base64.b64encode(encryptedAESkey).decode('utf-8'),
-        'aesKey': base64.b64encode(AESkey).decode('utf-8'),
-        'userPEM': str(userKeyPEM)
     }
     return result
 
 
 def decryptAES(js, RSAdecryptor):
-    print(js)
     json_k = ['nonce', 'encryptedKey', 'cipherText', 'tag']
     jv = {k: base64.b64decode(js[k]) for k in json_k}
     aesKey = RSAdecryptor.decrypt(jv['encryptedKey'])

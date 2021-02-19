@@ -81,6 +81,7 @@ def test_login_validate_input(auth, login, password, message):
 def test_logout(client, auth, app):
     token = auth.login("test1", "test1")
 
+    # check if user session is deleted from db
     with client and app.app_context():
         auth.logout(token)
         assert(

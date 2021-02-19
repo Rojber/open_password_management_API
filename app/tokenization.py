@@ -34,10 +34,10 @@ def checkToken(token, db):
         )
         return outcome, userID, session['public_key_PEM']
     else:
-        db.passwordManager.sessions.remove(
+        db.passwordManager.sessions.delete_one(
             {
                 'token': token
-            }, True
+            }
         )
-        outcome = 1
+        outcome = 2
         return outcome, None, None

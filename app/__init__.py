@@ -21,5 +21,3 @@ def create_app(config_name):
     app.register_blueprint(public_blueprint, url_prefix='/api')
 
     return app
-
-# TODO errors grinberg str 181, 188

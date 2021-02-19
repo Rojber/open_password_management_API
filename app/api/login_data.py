@@ -142,6 +142,7 @@ def getBackup():
             '_id': ObjectId(g.userID)
         },
         {
+            '_id': 0,
             'logindata': 1
         }
     )
