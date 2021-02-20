@@ -1,0 +1,586 @@
+{
+  "info": {
+    "description": "Password management API created as a free software. Ready for deployment on server or PaaS like Heroku.",
+    "version": "1.0.0",
+    "title": "Open Password Management API",
+    "contact": {
+      "name": "Robert Molenda",
+      "url": "https://github.com/Rojber"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "basePath": "/api",
+  "swagger": "2.0",
+
+  "securityDefinitions": {
+    "UserToken": {
+     "type": "apiKey",
+     "in": "header",
+     "name": "token"
+    }
+  },
+
+  "definitions": {
+    "SignUp": {
+     "properties": {
+       "data": {
+        "type": "object",
+         "properties": {
+           "email": {
+             "type": "string"
+           },
+           "login": {
+             "type": "string"
+           },
+           "password": {
+             "type": "string"
+           }
+         }
+       }
+     }
+    },
+    "SignIn": {
+     "properties": {
+       "data": {
+        "type": "object",
+         "properties": {
+           "login": {
+             "type": "string"
+           },
+           "password": {
+             "type": "string"
+           }
+         }
+       },
+       "public_key_PEM": {
+         "type": "string",
+         "description": "User's public RSA key in format PEM"
+       }
+     }
+    },
+    "User_get": {
+      "properties": {
+        "_id": {
+          "type": "object",
+          "properties": {
+            "$oid": {
+              "type": "string"
+            }
+          }
+        },
+        "email": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        }
+      }
+    },
+    "User_put": {
+     "properties": {
+       "email": {
+         "type": "string"
+       },
+       "login": {
+         "type": "string"
+       },
+       "password": {
+         "type": "string"
+       }
+     }
+    },
+    "AllSites": {
+      "properties": {
+        "_id": {
+          "type": "object",
+          "properties": {
+            "$oid": {
+              "type": "string"
+            }
+          }
+        },
+        "site": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "passwordStrength": {
+          "type": "integer"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginData_get": {
+      "properties": {
+        "_id": {
+          "type": "object",
+          "properties": {
+            "$oid": {
+              "type": "string"
+            }
+          }
+        },
+        "site": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordStrength": {
+          "type": "integer"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginData_put": {
+      "properties": {
+        "site": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "Backup": {
+      "properties": {
+        "_id": {
+          "type": "object",
+          "properties": {
+            "$oid": {
+              "type": "string"
+            }
+          }
+        },
+        "site": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordStrength": {
+          "type": "integer"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "PasswordStrength": {
+      "properties": {
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  },
+
+  "responses":{
+    "UnauthorizedError":{
+      "description": "{\"response\": \"WRONG TOKEN\"} or {\"response\": \"SESSION EXPIRED\"}"
+    }
+  },
+
+  "paths": {
+    "/SignUp": {
+      "post": {
+        "summary": "New user registration",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User data that needs to be added to DB",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignUp"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "400": {
+            "description": "{\"response\": \"LOGIN/EMAIL ALREADY USED\"}"
+          }
+        }
+      }
+    },
+    "/SignIn": {
+      "post": {
+        "summary": "User login",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User credentials and his public RSA key",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignIn"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"response\": \"_token_\"}"
+          },
+          "400": {
+            "description": "{\"response\": \"NOT LOGGED IN\"}"
+          }
+        }
+      }
+    },
+    "/User": {
+      "get": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Get user data",
+        "responses": {
+          "200": {
+            "description": "Returning user info",
+            "schema": {
+              "$ref": "#/definitions/User_get"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Edit user data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User data to edit",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User_put"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Delete user",
+        "responses": {
+          "200": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/GetPublicKey": {
+      "get": {
+        "summary": "Get server public key in PEM format",
+        "responses": {
+          "200": {
+            "description": "Server public key in PEM format",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/AllSites": {
+      "get": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Download JSON with all records of user LoginData (without passwords)",
+        "responses": {
+          "200": {
+            "description": "Returning user LoginData records (as a table of JSONs)",
+            "schema": {
+              "$ref": "#/definitions/AllSites"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/LoginData/{loginID}": {
+      "get": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Download JSON with full LoginData record of specified loginID",
+        "parameters": [
+          {
+            "name": "loginID",
+            "in": "path",
+            "description": "ID of LoginData to return",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returning user LoginData",
+            "schema": {
+              "$ref": "#/definitions/LoginData_get"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Edit LoginData record of specified loginID",
+        "parameters": [
+          {
+            "name": "loginID",
+            "in": "path",
+            "description": "ID of LoginData to edit",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "LoginData to edit",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginData_put"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Delete LoginData record of specified loginID",
+        "parameters": [
+          {
+            "name": "loginID",
+            "in": "path",
+            "description": "ID of LoginData to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/LoginData": {
+      "post": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Add LoginData record",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "LoginData to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginData_put"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/Backup": {
+      "get": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Download JSON with all LoginData records with passwords as a backup (not necrypted)",
+        "responses": {
+          "200": {
+            "description": "Returning user LoginData backup (as a table of JSONs)",
+            "schema": {
+              "$ref": "#/definitions/Backup"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/PasswordStrength": {
+      "post": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Check password strength",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Password to check",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PasswordStrength"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password strength",
+            "schema": {
+              "properties": {
+                "passwordStrength": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/PasswordStrength/Hibp": {
+      "post": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Check if password has been leaked using haveibeenpwnd.com",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Password to check",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PasswordStrength"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"response\": \"OK\"}"
+          },
+          "400": {
+            "description": "{\"response\": \"PASSWORD LEAKED\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/PasswordStrength/{PasswordLen}": {
+      "get": {
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Generate strong password with given length",
+        "parameters": [
+          {
+            "name": "PasswordLen",
+            "in": "path",
+            "description": "Length of password to generate",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"response\": \"_strong_password_\"}"
+          },
+          "401": {
+            "$ref": "#/responses/UnauthorizedError"
+          }
+        }
+      }
+    }
+  }
+}

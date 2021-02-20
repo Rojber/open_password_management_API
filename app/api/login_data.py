@@ -10,6 +10,9 @@ from app import auxiliaryFuncs
 def before_request():
     g.db, g.client_encryption, g.data_key_id = create_csfle_client(current_app.config['MONGODB_CONNECTION_STRING'])
 
+    if 'token' not in request.headers:
+        return json_util.dumps({'response': 'WRONG TOKEN'}), 401
+
     outcome, g.userID, g.userKeyPEM = checkToken(request.headers['token'], g.db)
     if outcome == 1:
         return json_util.dumps({'response': 'WRONG TOKEN'}), 401

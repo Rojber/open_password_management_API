@@ -32,6 +32,6 @@ def passwordCheckHIBP():
 
     password = js['password']
     if auxiliaryFuncs.hibpIsPwned(password) is True:
-        return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'PASSWORD LEAKED'}, g.userKeyPEM)), 200
+        return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'PASSWORD LEAKED'}, g.userKeyPEM)), 400
     else:
         return json_util.dumps(auxiliaryFuncs.encryptAES({'response': 'OK'}, g.userKeyPEM)), 200
