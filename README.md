@@ -3,7 +3,7 @@
 in external servers, but wants to have remote access to them. It's an open code under MIT license which means that you are welcome to 
 adjust it just as you would like.<br>
 <b>You need to create a client application,</b> so it's a great opportunity to do it exactly as you would want to! 
-It's also a great testing ground for beginning frontend programmers, because you can focus on your favourite job - I did the rest :)<br>
+It's also a great testing ground for beginning frontend programmers, because you can focus on your favourite job - I did the REST :)<br>
 
 ## Features
 List of all features available in API:
