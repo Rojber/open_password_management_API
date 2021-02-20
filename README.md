@@ -1,7 +1,7 @@
 # Open password management API
 <b>Open password management</b> is an open-source <b>WebAPI</b> created for people who don't want to keep their sensitive data
-in external servers, but also wants to have remote access to them. It's an open code under MIT license which means that you are welcome to 
-adjust it just as you would like. <br>
+in external servers, but wants to have remote access to them. It's an open code under MIT license which means that you are welcome to 
+adjust it just as you would like.<br>
 <b>You need to create a client application,</b> so it's a great opportunity to do it exactly as you would want to! 
 It's also a great testing ground for beginning frontend programmers, because you can focus on your favourite job - I did the rest :)<br>
 
@@ -17,9 +17,8 @@ List of all features available in API:
  - Integration with the [haveibeenpwned.com](https://haveibeenpwned.com) service to check if the password used by the user isn't present in the stolen passwords databases.
  - Generating a backup of user data (in the form of an unencrypted json file). 
 
-## Endpoints documentation
-List of endpoints is available [here!](https://docs.google.com/document/d/1X1qFsq4SmFmuO022_NVMVkHq81W-jsmMaOiyh9KugQw/edit?usp=sharing). 
-
+## Swagger API documentation
+Swagger documentation of API is aviable at endpoint `/api/Docs`.
 
 ## Database
 OPM uses the noSQL MongoDB database. The API uses two collections (the SQL table equivalents). The "accounts" collection 
